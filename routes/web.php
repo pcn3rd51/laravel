@@ -13,31 +13,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home.index', []);
-})->name('home.index');
+// Route::get('/', function () {
+//     return view('home.index', []);
+// })->name('home.index');
 
-Route::get('/contact', function () {
-    return view('home.contact');
-})->name('home.contact');
+Route::view('/', 'home.index')
+    ->name('home.index');
+
+// Route::get('/contact', function () {
+//     return view('home.contact');
+// })->name('home.contact');
+
+Route::view('/contact', 'home.contact')
+    ->name('home.contact');
 
 Route::get('/posts/{id}', function ($id) {
     $posts = [
         1 => [
             'title'   => 'Intro to Laravel',
-            'content' => 'This is a short intro to Laravel'
+            'content' => 'This is a short intro to Laravel',
+            'is_new'  => true
         ],
         2 => [
             'title'   => 'Intro to PHP',
-            'content' => 'This is a short intro to PHP'
+            'content' => 'This is a short intro to PHP',
+            'is_new'  => false
         ]
     ];
 
-    abort_if(!isset($post['$id']), 404);
+    abort_if(!isset($posts[$id]), 404);
 
     return view('posts.show', ['post' => $posts[$id]]);
-    // return 'blog post ' . $id;
 })
+    ->name('posts.show');
 /*
  * go to app/Providers and open RouterServiceProvider.php
  * look for public function boot() and find Route::pattern
@@ -46,8 +54,8 @@ Route::get('/posts/{id}', function ($id) {
 // ->where([
 //     'id' => '[0-9]+'
 // ])
-->name('posts.show');
 
 Route::get('/recent-posts/{days_ago?}', function ($days_ago = 20) {
     return 'Post from ' . $days_ago . ' days ago.';
-})->name('posts.recent.index');
+})
+    ->name('posts.recent.index');
